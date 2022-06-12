@@ -14807,8 +14807,11 @@ Node.random is null or is pointing to some node in the linked list.</p>
     <span class="k">def</span> <span class="nf">copyRandomList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">head</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">[</span><span class="n">head</span><span class="p">]</span>
+
         <span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">[</span><span class="n">head</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
+        
         <span class="n">node</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyRandomList</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
         <span class="n">node</span><span class="o">.</span><span class="n">random</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyRandomList</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">random</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">node</span>
@@ -15275,19 +15278,19 @@ Output: []</p>
 
 <span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">rightSideView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">root</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1">#ensure root is not None</span>
             <span class="k">return</span> <span class="p">[]</span>
         
-        <span class="n">next_level</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">,])</span>
-        <span class="n">rightside</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">next_level</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">,])</span> <span class="c1">#since we need to left node, only keep right node, so we choose deque data structure since it has leftpop() method</span>
+        <span class="n">rightside</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># default empty space to store the res</span>
         
         <span class="k">while</span> <span class="n">next_level</span><span class="p">:</span>
             <span class="c1"># prepare for the next level</span>
-            <span class="n">curr_level</span> <span class="o">=</span> <span class="n">next_level</span>
-            <span class="n">next_level</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+            <span class="n">curr_level</span> <span class="o">=</span> <span class="n">next_level</span>   <span class="c1">#pass next_level to curr_level, since we are on the level</span>
+            <span class="n">next_level</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>      <span class="c1"># refresh next_level, prepare for next node</span>
 
-            <span class="k">while</span> <span class="n">curr_level</span><span class="p">:</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">curr_level</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">while</span> <span class="n">curr_level</span><span class="p">:</span>        <span class="c1">#if we do have current_level, like (for node in level: if node:)</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">curr_level</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>   <span class="c1">#remove left node</span>
                     
                 <span class="c1"># add child nodes of the current level</span>
                 <span class="c1"># in the queue for the next level</span>
@@ -15607,8 +15610,8 @@ Medium</li>
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">stack</span><span class="p">,</span> <span class="n">cur</span><span class="p">,</span> <span class="n">op</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+        <span class="n">stack</span><span class="p">,</span> <span class="n">cur</span><span class="p">,</span> <span class="n">op</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span>   <span class="c1">#using stack, to put every string into stack, and last in first out</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span> <span class="c1">#? why + &#39;+&#39;</span>
             <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="c1">#这里判断是不是两位数或者以上</span>
@@ -15759,17 +15762,17 @@ Output: 1</p>
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">lowestCommonAncestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="s1">&#39;TreeNode&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="s1">&#39;TreeNode&#39;</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="s1">&#39;TreeNode&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TreeNode&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="n">q</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="n">q</span><span class="p">:</span> <span class="c1">#under those cases, LCA is the root itself</span>
             <span class="k">return</span> <span class="n">root</span>
         
-        <span class="n">Left_LCA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">)</span>
-        <span class="n">Right_LCA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">)</span>
+        <span class="n">Left_LCA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">)</span> <span class="c1"># find LCA for all left nodes</span>
+        <span class="n">Right_LCA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">)</span> <span class="c1"># find LCA for all right nodes</span>
         
         <span class="k">if</span> <span class="n">Left_LCA</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Right_LCA</span>
+            <span class="k">return</span> <span class="n">Right_LCA</span>  <span class="c1">#if no left we go to right</span>
         
         <span class="k">if</span> <span class="n">Right_LCA</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Left_LCA</span>
+            <span class="k">return</span> <span class="n">Left_LCA</span>   <span class="c1"># if no right we go to left</span>
         
         <span class="k">return</span> <span class="n">root</span>
 </pre></div>
@@ -15810,12 +15813,12 @@ Output: [["a"]]</p>
     <span class="k">def</span> <span class="nf">groupStrings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         
         <span class="k">def</span> <span class="nf">shift_letter</span><span class="p">(</span><span class="n">letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>   <span class="c1"># % 26 use to check how many times they looped for 26 alphabets, then the number + &#39;a&#39; unicode is the char unicode</span>
         
         <span class="c1"># Create a hash value</span>
         <span class="k">def</span> <span class="nf">get_hash</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># Calculate the number of shifts to make the first character to be &#39;a&#39;</span>
-            <span class="n">shift</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1">#here string is sub_arr in input strings, since below we call for loop, ord(string[0]) = ord(&quot;a&quot;) = 97, unicode number</span>
             <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">shift_letter</span><span class="p">(</span><span class="n">letter</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span> <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">string</span><span class="p">)</span>
         
         <span class="c1"># Create a hash_value (hashKey) for each string and append the string</span>
@@ -15844,66 +15847,6 @@ Output: [["a"]]</p>
 
 <span class="n">s</span><span class="o">=</span><span class="n">Solution</span><span class="p">()</span>
 <span class="n">s</span><span class="o">.</span><span class="n">groupStrings</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>[[&#39;abc&#39;, &#39;bcd&#39;, &#39;xyz&#39;], [&#39;acef&#39;], [&#39;az&#39;, &#39;ba&#39;], [&#39;a&#39;, &#39;z&#39;]]</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">groupStrings</span><span class="p">(</span><span class="n">strings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-	<span class="n">hashmap</span> <span class="o">=</span> <span class="p">{}</span>
-	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">:</span>
-		<span class="n">key</span> <span class="o">=</span> <span class="p">()</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-			<span class="n">circular_difference</span> <span class="o">=</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-			<span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="n">circular_difference</span> <span class="o">%</span> <span class="mi">26</span><span class="p">,)</span>
-		<span class="n">hashmap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">hashmap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span>
-	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">hashmap</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">input</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span><span class="s2">&quot;bcd&quot;</span><span class="p">,</span><span class="s2">&quot;acef&quot;</span><span class="p">,</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span><span class="s2">&quot;az&quot;</span><span class="p">,</span><span class="s2">&quot;ba&quot;</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
-<span class="n">groupStrings</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15963,27 +15906,34 @@ Output: [[4],[9,5],[3,0,1],[8,2],[7]]</p>
 
 <span class="c1"># TreeNode</span>
 
+<span class="c1">#BFS + 字典. </span>
+<span class="c1"># 我们构造字典, 储存列值和对应的节点值, 设根节点的列值为0, 那么它的左节点的列是-1, </span>
+<span class="c1"># 右节点的列是1, 然后使用广度优先搜索, 将每层的节点和对应的列数放入q, </span>
+<span class="c1"># 然后更新字典. 最后我们将字典的键升序排列, 求对应的值即可.</span>
+
 <span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">verticalOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">columnTable</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="n">columnTable</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>   <span class="c1">#create a dict</span>
         <span class="n">min_column</span> <span class="o">=</span> <span class="n">max_column</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="n">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="n">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>   <span class="c1">#create a queue, root and root&#39;s col is 0</span>
 
         <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
-            <span class="n">node</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="n">node</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>   <span class="c1">#popleft would pop out two values</span>
 
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">columnTable</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-                <span class="n">min_column</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_column</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-                <span class="n">max_column</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_column</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+                <span class="n">columnTable</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>   <span class="c1">#{col:node.val}</span>
+                <span class="n">min_column</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_column</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>   <span class="c1">#min_col will move to the left most node</span>
+                <span class="n">max_column</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_column</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>   <span class="c1">#max_col will move to the right most node</span>
 
-                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
-                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>   <span class="c1">#left node, col -1</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1">#right node, col +1</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="n">columnTable</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_column</span><span class="p">,</span> <span class="n">max_column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">columnTable</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_column</span><span class="p">,</span> <span class="n">max_column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="c1">#range is left most node to right most node, since python so need to remember +1</span>
+        <span class="c1">#output the value that be stored into our dict</span>
+
 
 <span class="c1">#TreeBuilder</span>
 </pre></div>
@@ -16014,7 +15964,7 @@ Output: [1]</p>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span> <span class="c1">#kind of dict, stored object as key, count as value, {object:value}</span>
 <span class="kn">import</span> <span class="nn">heapq</span>
 <span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">topKFrequent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> 
@@ -16029,97 +15979,6 @@ Output: [1]</p>
         <span class="c1"># convert it into an output array</span>
         <span class="c1"># O(N log k) time</span>
         <span class="k">return</span> <span class="n">heapq</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">count</span><span class="o">.</span><span class="n">get</span><span class="p">)</span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">topKFrequent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="n">bucket</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="n">Count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>  
-        <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">Count</span><span class="p">:</span> <span class="n">bucket</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> 
-        <span class="n">flat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">bucket</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">flat_list</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="n">k</span><span class="p">]</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">topKFrequent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
-        <span class="n">unique</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        
-        <span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">pivot_index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-            <span class="n">pivot_frequency</span> <span class="o">=</span> <span class="n">count</span><span class="p">[</span><span class="n">unique</span><span class="p">[</span><span class="n">pivot_index</span><span class="p">]]</span>
-            <span class="c1"># 1. move pivot to end</span>
-            <span class="n">unique</span><span class="p">[</span><span class="n">pivot_index</span><span class="p">],</span> <span class="n">unique</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">[</span><span class="n">right</span><span class="p">],</span> <span class="n">unique</span><span class="p">[</span><span class="n">pivot_index</span><span class="p">]</span>  
-            
-            <span class="c1"># 2. move all less frequent elements to the left</span>
-            <span class="n">store_index</span> <span class="o">=</span> <span class="n">left</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">count</span><span class="p">[</span><span class="n">unique</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">pivot_frequency</span><span class="p">:</span>
-                    <span class="n">unique</span><span class="p">[</span><span class="n">store_index</span><span class="p">],</span> <span class="n">unique</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">unique</span><span class="p">[</span><span class="n">store_index</span><span class="p">]</span>
-                    <span class="n">store_index</span> <span class="o">+=</span> <span class="mi">1</span>
-
-            <span class="c1"># 3. move pivot to its final place</span>
-            <span class="n">unique</span><span class="p">[</span><span class="n">right</span><span class="p">],</span> <span class="n">unique</span><span class="p">[</span><span class="n">store_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">[</span><span class="n">store_index</span><span class="p">],</span> <span class="n">unique</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>  
-            
-            <span class="k">return</span> <span class="n">store_index</span>
-        
-        <span class="k">def</span> <span class="nf">quickselect</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">k_smallest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Sort a list within left..right till kth less frequent element</span>
-<span class="sd">            takes its place. </span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="c1"># base case: the list contains only one element</span>
-            <span class="k">if</span> <span class="n">left</span> <span class="o">==</span> <span class="n">right</span><span class="p">:</span> 
-                <span class="k">return</span>
-            
-            <span class="c1"># select a random pivot_index</span>
-            <span class="n">pivot_index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>     
-                            
-            <span class="c1"># find the pivot position in a sorted list   </span>
-            <span class="n">pivot_index</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">pivot_index</span><span class="p">)</span>
-            
-            <span class="c1"># if the pivot is in its final sorted position</span>
-            <span class="k">if</span> <span class="n">k_smallest</span> <span class="o">==</span> <span class="n">pivot_index</span><span class="p">:</span>
-                 <span class="k">return</span> 
-            <span class="c1"># go left</span>
-            <span class="k">elif</span> <span class="n">k_smallest</span> <span class="o">&lt;</span> <span class="n">pivot_index</span><span class="p">:</span>
-                <span class="n">quickselect</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">pivot_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k_smallest</span><span class="p">)</span>
-            <span class="c1"># go right</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">quickselect</span><span class="p">(</span><span class="n">pivot_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">k_smallest</span><span class="p">)</span>
-         
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span> 
-        <span class="c1"># kth top frequent element is (n - k)th less frequent.</span>
-        <span class="c1"># Do a partial sort: from less frequent to the most frequent, till</span>
-        <span class="c1"># (n - k)th less frequent element takes its place (n - k) in a sorted array. </span>
-        <span class="c1"># All element on the left are less frequent.</span>
-        <span class="c1"># All the elements on the right are more frequent.  </span>
-        <span class="n">quickselect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
-        <span class="c1"># Return top k frequent elements</span>
-        <span class="k">return</span> <span class="n">unique</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">:]</span>
 </pre></div>
 
      </div>
@@ -16157,20 +16016,19 @@ Output: 0</p>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#DFS</span>
-
 <span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">depthSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nestedList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NestedInteger</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 
         <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">nested_list</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
-            <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">nested</span> <span class="ow">in</span> <span class="n">nested_list</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">nested</span><span class="o">.</span><span class="n">isInteger</span><span class="p">():</span>
-                    <span class="n">total</span> <span class="o">+=</span> <span class="n">nested</span><span class="o">.</span><span class="n">getInteger</span><span class="p">()</span> <span class="o">*</span> <span class="n">depth</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#default sum inital value zero</span>
+            <span class="k">for</span> <span class="n">nested</span> <span class="ow">in</span> <span class="n">nested_list</span><span class="p">:</span> <span class="c1">#sub_arr of nestedList</span>
+                <span class="k">if</span> <span class="n">nested</span><span class="o">.</span><span class="n">isInteger</span><span class="p">():</span> <span class="c1"># if the sub_arr is integer</span>
+                    <span class="n">total</span> <span class="o">+=</span> <span class="n">nested</span><span class="o">.</span><span class="n">getInteger</span><span class="p">()</span> <span class="o">*</span> <span class="n">depth</span>  <span class="c1"># current depth is 1, so sum = integer * depth 1</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">total</span> <span class="o">+=</span> <span class="n">dfs</span><span class="p">(</span><span class="n">nested</span><span class="o">.</span><span class="n">getList</span><span class="p">(),</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">total</span> <span class="o">+=</span> <span class="n">dfs</span><span class="p">(</span><span class="n">nested</span><span class="o">.</span><span class="n">getList</span><span class="p">(),</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#otherwise, get the list and depth increse and go dfs again</span>
             <span class="k">return</span> <span class="n">total</span>
 
-        <span class="k">return</span> <span class="n">dfs</span><span class="p">(</span><span class="n">nestedList</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dfs</span><span class="p">(</span><span class="n">nestedList</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># start from depth 1</span>
 </pre></div>
 
      </div>
@@ -16188,18 +16046,18 @@ Output: 0</p>
 
 <span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">depthSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nestedList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NestedInteger</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">nestedList</span><span class="p">)</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">nestedList</span><span class="p">)</span>  <span class="c1">#use deque</span>
 
         <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)):</span>
-                <span class="n">nested</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">nested</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>  <span class="c1"># pop out the right most</span>
                 <span class="k">if</span> <span class="n">nested</span><span class="o">.</span><span class="n">isInteger</span><span class="p">():</span>
                     <span class="n">total</span> <span class="o">+=</span> <span class="n">nested</span><span class="o">.</span><span class="n">getInteger</span><span class="p">()</span> <span class="o">*</span> <span class="n">depth</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">queue</span><span class="o">.</span><span class="n">extendleft</span><span class="p">(</span><span class="n">nested</span><span class="o">.</span><span class="n">getList</span><span class="p">())</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">extendleft</span><span class="p">(</span><span class="n">nested</span><span class="o">.</span><span class="n">getList</span><span class="p">())</span> <span class="c1"># integers would be poped since queue.pop(), get list and append to left of queue</span>
             <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">return</span> <span class="n">total</span>
